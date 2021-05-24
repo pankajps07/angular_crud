@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background:#dbf0f0">
+
+<section>
+	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <!-- Brand -->
+  <a class="navbar-brand" href="#">ADMIN PANEL</a>
+
+  <!-- Toggler/collapsibe Button -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Navbar links -->
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#">HOME</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+</section>
+
+
+<section >
+  <div class="container mt-5" style="width: 500px; " align="center">
+    <div class="card-deck">
+      <div class="card">
+        <h3 class="card-header text-center text-success">Admin Login</h3>
+        <div class="card-body">
+          <div ng-app="app" ng-controller="control">
+
+   <form name="form" novalidate>
+    <input type="email" name="email" ng-model="email" placeholder="Enter Email" class="form-control p-2" required>
+    <span class="text-danger" ng-show="form.email.$touched && form.email.$invalid || form.email.$untouched && form.email.$invalid">
+    <span ng-show="form.email.$error.required" class="text-danger">The email is required.</span>
+    <span ng-show="form.email.$error.email" class="text-danger">Invalid Email</span>
+    </span>
+
+    <input type="password" name="pass" ng-model="pass" placeholder="Enter Password" class="form-control p-2" required=""> <br>
+     <span class="text-danger" ng-show="form.pass.$touched && form.pass.$invalid || form.pass.$untouched && form.pass.$invalid">The Password is required.</span>
+<br>
+    <button ng-disabled="form.email.$untouched && form.email.$invalid || form.pass.$untouched && form.pass.$invalid || form.email.$error.required || form.email.$error.email " class="btn btn-primary mt-2 w-50" type="submit" ng-click="onsubmit()">Login</button>
+   </form>
+  </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ <script src="assets/vendor/jquery/jquery.min.js"></script>
+ <script src="assets/js/popper.min.js"></script>
+ <script src="assets/js/angular.min.js"></script>
+ <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>		
+</body>
+</html>
+
+<script>
+  var app=angular.module("app",[]);
+  app.controller("control",function($scope,$http){
+    var email=$scope.email;
+    var pass=$scope.pass;
+    
+    $scope.onsubmit=function(){
+      $http.post("adminlogin.php",{'email':$scope.email,'pass':$scope.pass}).then(function(response){
+      var res=response.data;
+      if(res==1){
+        window.location.replace("crud.html");
+      }else{
+        
+          alert("Invalid Login Crediantials");
+          $scope.email=null;
+          $scope.pass=null;        
+
+        }
+      // location.replace("index.html");
+    });
+    }
+  });
+</script>

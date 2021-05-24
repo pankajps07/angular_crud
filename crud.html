@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> ANGULAR | CRUD </title>
+	<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<style>
+
+	input[type="text"]{
+
+	
+	}
+	input[type="text"]:focus{
+		border: 1px solid #cde61a;		
+		
+		box-shadow: 0px 0px 3px 2.5px #e1f075;
+	
+	}
+</style>
+</head>
+
+<body style="background:">
+
+<section>
+	<div class="container" style="width: 730px">
+		<div class=" ">
+			<div class="" ng-app="myapp" ng-controller="control" ng-init="displaydata()">
+
+				
+<div style="width: 730px;" align="center" class="mt-5">
+<div class="card-deck" >
+	<div class="card">
+
+<h3 class="text-center mb-4 text-success card-header">ANGULARJS CRUD OPERATION</h3>
+		<div class="card-body">
+	<!-- Button to Open the Modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+  Add Task
+</button>
+
+</div>
+</div>
+</div>
+<!-- The Modal -->
+<div class="modal" id="myModal" >
+  <div class="modal-dialog" style="border-inline:1px solid black">
+    <div class="modal-content" >
+
+      <!-- Modal Header -->
+      <div class="modal-header" style="background:#e6e6e6">
+        <h4 class="modal-title text-primary pl-5" align="center">ANGULARJS CRUD OPERATION</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+    <div class="modal-body" >
+    <h3 class="text-center"> </h3>
+				<input type="text" name="name" ng-model="name" class="form-control" placeholder="Enter Task">
+				<br>
+				<textarea type="text" name="task" ng-model="task" class="form-control" placeholder="Enter Task Description"></textarea>
+				<br>
+				<input type="hidden" name="id" ng-model="id">
+
+				
+    </div> 
+    
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      	<button type="submit" ng-click="insertdata()" class="btn btn-info col-md-4 ">{{btname}}</button>
+
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+	
+				<br/>  <br/>
+<div class="card-deck">
+	<div class="card">	
+	<h4 class="text-center card-header text-success">Task Details</h4>	
+		<div class="card-body">
+			
+				<div class=""> 
+					<table class="table table-bordered">
+						<tr class="text-center">
+							<th>Task Name</th>
+							<th>Task Description</th>
+							<th >Edit</th>
+							<th>Delete</th>
+						</tr>
+						<tr ng-repeat="x in res">
+							<td>{{x.name}}</td>
+							<td>{{x.task}}</td>
+							<td><button class="btn btn-info btn-sm " data-toggle="modal" data-target="#myModal" ng-click="update(x.id,x.name,x.task)">Update</button></td>
+
+							<td><button class="btn btn-danger btn-sm" ng-click="delete(x.id)">Delete</button></td>
+						</tr>
+					</table>
+      </div>
+
+		</div>
+	</div>
+</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+
+
+ <script src="assets/vendor/jquery/jquery.min.js"></script>
+ <script src="assets/js/popper.min.js"></script>
+ <script src="assets/js/angular.min.js"></script>
+ <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>	
+</body>
+</html>
+
+<script>
+	var app=angular.module("myapp",[]);
+	app.controller("control",function($scope,$http){
+		$scope.btname="Insert";
+		$scope.insertdata=function(){
+			if($scope.name==null){
+				alert("Task Required");
+			}
+			else if($scope.task==null){
+				alert("Task Information Required");
+			}
+			else
+			{
+			$http.post(
+				"insert.php",
+				{'name':$scope.name,'task':$scope.task,'btname':$scope.btname,'id':$scope.id}
+			).then(function(response){
+				var res=response.data;
+				alert(res);
+				$scope.name=null;
+				$scope.task=null;
+				$scope.btname="Insert";
+				$scope.displaydata();
+			});
+			
+		}
+	}
+
+		$scope.displaydata=function(){
+			$http.get("display.php")
+			.then(function(response){
+				$scope.res=response.data;
+			});
+		}
+
+		$scope.update=function(id,name,task){
+			$scope.id=id;
+			$scope.name=name;
+			$scope.task=task;
+			$scope.btname="Update";
+
+		}
+		$scope.delete=function(id){
+			if(confirm("Are You Sure ? Want To Delete Data ?"))
+			{
+				$http.post(
+					"delete.php",
+					{'id':id}).then(function(response){
+					var resp=response.data;
+					alert(resp);
+					$scope.displaydata();
+				});
+			}
+
+		}
+
+	});
+</script>
